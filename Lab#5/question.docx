@@ -1,0 +1,73 @@
+Threads:
+
+#include <stdio.h>
+#include <windows.h>
+
+// Function to be executed by the first thread
+DWORD WINAPI ThreadFunction1(LPVOID lpParam) {
+printf("Thread 1: Hello from Thread 1!\n");
+return 0;
+}
+
+// Function to be executed by the second thread
+DWORD WINAPI ThreadFunction2(LPVOID lpParam) {
+printf("Thread 2: Hello from Thread 2!\n");
+return 0;
+}
+
+int main() {
+HANDLE hThread1, hThread2;
+
+// Create the first thread
+hThread1 = CreateThread(NULL, 0, ThreadFunction1, NULL, 0, NULL);
+if (hThread1 == NULL) {
+printf("Error creating Thread 1\n");
+return 1;
+}
+
+// Create the second thread
+hThread2 = CreateThread(NULL, 0, ThreadFunction2, NULL, 0, NULL);
+if (hThread2 == NULL) {
+printf("Error creating Thread 2\n");
+return 1;
+}
+
+// Wait for the threads to finish
+WaitForSingleObject(hThread1, INFINITE);
+WaitForSingleObject(hThread2, INFINITE);
+
+// Close thread handles
+CloseHandle(hThread1);
+CloseHandle(hThread2);
+
+return 0;
+}
+```
+
+
+Certainly! Let’s break down the function signature DWORD WINAPI ThreadFunction1(LPVOID lpParam):
+
+1. DWORD: This is the return type of the function. DWORD stands for “double word,” which is a 32-bit unsigned integer. In this context, it means that the function should return a 32-bit unsigned integer when it’s done executing.
+2. WINAPI: This is a calling convention. It specifies how the function is called and how parameters are passed. In Windows programming, WINAPI is often used for functions that interact with the Windows API. It ensures that the function complies with the calling conventions expected by the Windows operating system.
+3. ThreadFunction1: This is the name of the function. It’s the actual code that will be executed by one of the threads. You can name this function anything you like, but in this example, it’s named ThreadFunction1 to indicate it’s the code that the first thread will run.
+4. LPVOID lpParam: This is the function’s parameter. Let’s break it down further:
+• LPVOID: This is a Windows-specific data type. LP stands for “Long Pointer,” and VOID means that it’s a pointer to some data, but the type of data is not specified. In other words, it’s a generic pointer.
+• lpParam: This is the name of the parameter. It’s like a placeholder for some data that could be passed to the function. In this example, lpParam is not used, but you could pass data to the function using this parameter if needed.
+
+So, in simple terms, DWORD WINAPI ThreadFunction1(LPVOID lpParam) means that ThreadFunction1 is a function that doesn’t require any specific input data and should return a 32-bit unsigned integer. It follows the Windows calling conventions for thread functions. This function will be executed by one of the threads when you create and start the threads.
+
+1. HANDLE hThread1, hThread2: These variables are used to store handles to the threads we create. Think of them as unique identifiers for each thread.
+
+2. CreateThread(NULL, 0, ThreadFunction1, NULL, 0, NULL): This function creates a new thread. Here's what each parameter means:
+- NULL: The security attributes for the thread (usually set to NULL for default security).
+- 0: The stack size for the new thread (0 means it uses the default size).
+- ThreadFunction1: The function to be executed by the thread.
+- NULL: A pointer to data to pass to the thread (not used in this example).
+- 0: Flags (0 for normal thread creation).
+- NULL: A pointer to receive the thread identifier (not used here).
+
+3. WaitForSingleObject(hThread1, INFINITE): This function waits for a thread to finish. It "waits" for the thread represented by hThread1 to finish execution. INFINITE means it will wait indefinitely until the thread finishes.
+
+4. CloseHandle(hThread1): After the thread finishes, you close its handle. It's like saying you're done with the thread and don't need its handle anymore.
+
+The same explanations apply to hThread2 and ThreadFunction2, which represent the second thread. The code creates two threads and runs the functions ThreadFunction1 and ThreadFunction2 in those threads simultaneously.

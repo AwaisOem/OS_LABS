@@ -1,0 +1,88 @@
+Lab Session # 12
+Implementation of Best Fit and First Fit Memory Management Algorithms
+
+In this lab session, you will learn the implementation of best fit and first fit memory management algorithms. Visual C++ 6.0 IDE is recommended for editing/compiling the program(s).
+
+#include<iostream.h>
+#include<conio.h>
+#include<string.h>
+void main()
+{
+unsigned int n,j,i,size[10],m,x=0,t;
+int cho=1,ch;
+clrscr();
+cout<<”\t\t STORAGE PLACEMENT STRATEGIES\n”;
+cout<<”\tEnter the number of holes:”;
+cin>>n;
+for(i=1;i<=n;i++)
+{
+cout<<”\n Enter The Size Of Hole “<<i<<”:”;
+cin>>size[i];
+}
+while(cho==1)
+{
+cout<<”\nEnter the size of the incoming program:”;
+cin>>m;
+cout<<”\nMenu”;
+cout<<”\n1.First Fit Strategy \n2.Best Fit Strategy”;
+cout<<”\n Enter your choice:”;
+cin>>ch;
+x=0;
+switch(ch)
+{
+case 1:
+for(i=1;i<=n;i++)
+{
+if(size[i]>=m)
+{
+cout<<”\nYour program is placed in hole “<<i;
+size[i]-=m;
+x=i;
+break;
+}
+}
+if(x==0) cout<<”There is no room for your program.”;
+break;
+case 2:
+unsigned int temp=0,pos=0,t1;
+if(m<=size[1])
+{
+temp=size[1]-m;
+pos=1;
+}
+else
+temp=size[1];
+for(i=2;i<=n;i++)
+{
+if(m<=size[i])
+{
+t1=size[i]-m;
+if(temp>=t1)
+{
+temp=t1;
+pos=i;
+}
+}
+else  temp=size[i];
+}
+if(pos==0)
+cout<<”There is no room for your page.”;
+else
+{
+size[pos]=size[pos]-m;
+cout<<”Your program is palced in hole “<<pos;
+			}
+break;
+case 4:
+return;
+}
+cout<<”\nFree Storage List”;
+for(i=1;i<=n;i++)
+cout<<”\nHole “<<i<<”\t\t”<<size[i];
+cout<<”\n\nPress 1 to continue:”;
+cin>>cho;
+}
+}
+
+Exercise
+Implement  best fit and first fit Memory management algorithme.

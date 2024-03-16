@@ -1,0 +1,56 @@
+Lab Session # 3
+Inter Process Communication
+In this lab session, you will learn anonymous pipes for windows for inter process communication. More specifically, we will focus on unidirectional communication. The following code creates two processes and communication between them. Visual C++ 6.0 IDE is recommended for editing/compiling the program(s).
+
+
+Here is the code for parent process
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+#define BUFFER 25
+ 
+int main()
+{
+         HANDLE Read, Write;
+         PROCESS_INFORMATION pi;
+         STARTUPINFO si;
+         char message[BUFFER] = "Hello World";
+         DWORD written;
+         SECURITY_ATTRIBUTES sa = {sizeof(SECURITY_ATTRIBUTES),NULL, TRUE};
+         ZeroMemory(&pi, sizeof(pi));
+         if(!CreatePipe(&Read, &Write, &sa,0))
+         {
+                  fprintf(stderr,"Failed");
+                  return 1;
+         }
+         GetStartupInfo(&si);
+         si.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+         si.hStdInput = Read;
+         si.dwFlags = STARTF_USESTDHANDLES;
+         SetHandleInformation(Write, HANDLE_FLAG_INHERIT, 0);
+         CreateProcess(NULL,"E:\\Bushra Data\\OS LAB\\aChild\\Debug\\child.exe", NULL,NULL,TRUE,0,NULL,NULL, &si,&pi);
+         CloseHandle(Read);
+         if (!WriteFile(Write, message, BUFFER, &written,NULL))
+                  fprintf(stderr,"Write Failed");
+         CloseHandle(Write);
+         WaitForSingleObject(pi.hProcess,INFINITE);
+         CloseHandle(pi.hProcess);
+         CloseHandle(pi.hThread);
+         return 0;
+}
+Here is the code for child process
+
+
+#include <stdio.h>
+#include <windows.h>
+#define BUFFER 25
+int main()
+{
+       HANDLE Read;
+       CHAR buff[BUFFER];
+       DWORD read;
+       Read = GetStdHandle(STD_INPUT_HANDLE);
+       if (ReadFile(Read, buff, BUFFER, &read,NULL))
+              printf("Child Read %s",buff);
+       return 0;
+}
